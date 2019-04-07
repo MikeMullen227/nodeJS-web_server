@@ -10,7 +10,7 @@ app.listen(3000, () => {
     console.log('Server is up on port 3000');
 })
 
-
+app.set('view engin', 'hbs')
 // Dont need this root route anymore since express.static() is already serving it up
 // app.get('', (req, res) => {
 //     res.send('Hello express!')
