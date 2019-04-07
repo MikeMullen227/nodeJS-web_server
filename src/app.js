@@ -6,11 +6,33 @@ const app = express();
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
+app.get('', (req, res) => {
+    res.render('index', {
+            title: 'Weather app',
+            name: 'Mike Mullen'
+    })
+})
+
+app.get('/about', (req, res) => {
+    res.render('about', {
+        title: 'About Me',
+        name: 'Mike Mullen'
+    })
+})
+
+app.get('/help', (req, res) => {
+    res.render('help', {
+        title: 'Help Page',
+        message: 'Help, I need somebody!'
+    })
+})
+
+
 app.listen(3000, () => {
     console.log('Server is up on port 3000');
 })
 
-app.set('view engin', 'hbs')
+app.set('view engine', 'hbs')
 // Dont need this root route anymore since express.static() is already serving it up
 // app.get('', (req, res) => {
 //     res.send('Hello express!')
