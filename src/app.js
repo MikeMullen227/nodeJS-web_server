@@ -1,6 +1,9 @@
 const path = require('path');
 const express = require('express');
-const hbs = require('hbs')
+const hbs = require('hbs');
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
+var userCity;
 
 const app = express();
 
@@ -56,12 +59,36 @@ app.get('/weather', (req, res) => {
             error: 'You must enter an address.'
         })
     }
-    res.send({
-        forecast: 'Sunny with 0% of rain.',
-        location: 'Miami',
-        address: req.query.address
+    userCity = req.query.address
+    
+if(userCity) {
+    geocode(userCity, (error, {latitude, longitude, location}) => {
+        if(error){
+            return console.log(error);
+        } else {
+            forecast(latitude, longitude, (error, forecastData) => {
+                if(error) {
+                    return console.log('Error', error)
+                }
+                res.send({
+                    forecast: forecastData,
+                    location: location,
+                    address: req.query.address
+                })
+                console.log(location)
+                console.log(forecastData)
+            })
+        }    
     })
+    
+} else {
+    console.log('please enter a city name')
+}
+
+
 })
+
+console.log(userCity)
 
 app.get('/help/*', (req, res) => {
     res.render('404', {
@@ -108,3 +135,5 @@ app.set('view engine', 'hbs')
 // app.com
 // app.com/help
 // app.com/about
+
+
